@@ -1,34 +1,83 @@
-name: memory_card_game
-description: A Flutter memory card game.
-version: 1.0.0
+name: memory_game
+description: A new Flutter project.
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^2.2.2
-  audioplayers: ^5.2.1
+  shared_preferences: ^2.2.0
+  flutter_svg: ^2.0.10+1 # Thêm để hỗ trợ SVG
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
+  flutter_lints: ^3.0.0
 
 flutter:
   uses-material-design: true
+
   assets:
-    - assets/images/card1.png
-    - assets/images/card2.png
-    - assets/images/card3.png
-    - assets/images/card4.png
-    - assets/images/card5.png
-    - assets/images/card6.png
-    - assets/images/card7.png
-    - assets/images/card8.png
-    - assets/sounds/Bossa Antigua.mp3
-    - assets/sounds/Daily Beetle.mp3
-    - assets/sounds/flipcard.wav
-    - assets/sounds/match.wav
-    
+    # Khai báo các file SVG
+    - assets/images/ad.svg
+    - assets/images/ae.svg
+    - assets/images/af.svg
+    - assets/images/ag.svg
+    - assets/images/ai.svg
+    - assets/images/al.svg
+    - assets/images/am.svg
+    - assets/images/ao.svg
+    - assets/images/aq.svg
+    - assets/images/ar.svg
+    - assets/images/as.svg
+    - assets/images/at.svg
+    - assets/images/au.svg
+    - assets/images/aw.svg
+    - assets/images/ax.svg
+    - assets/images/az.svg
+    - assets/images/ba.svg
+    - assets/images/bb.svg
+    - assets/images/bd.svg
+    - assets/images/be.svg
+    - assets/images/bf.svg
+    - assets/images/bg.svg
+    - assets/images/bh.svg
+    - assets/images/bi.svg
+    - assets/images/bj.svg
+    - assets/images/bl.svg
+    - assets/images/bm.svg
+    - assets/images/bn.svg
+    - assets/images/bo.svg
+    - assets/images/bq.svg
+    - assets/images/br.svg
+    - assets/images/bs.svg
+    - assets/images/bt.svg
+    - assets/images/bv.svg
+    - assets/images/bw.svg
+    - assets/images/by.svg
+    - assets/images/bz.svg
+    - assets/images/ca.svg
+    - assets/images/cc.svg
+    - assets/images/cd.svg
+    - assets/images/cf.svg
+    - assets/images/cg.svg
+    - assets/images/ch.svg
+    - assets/images/ci.svg
+    - assets/images/ck.svg
+    - assets/images/cl.svg
+    - assets/images/cm.svg
+    - assets/images/cn.svg
+    - assets/images/co.svg
+    - assets/images/cr.svg
+    - assets/images/cu.svg
+    - assets/images/cv.svg
+    - assets/images/cw.svg
+    - assets/images/cy.svg
+    - assets/images/cz.svg
+    - assets/images/de.svg
+    - assets/images/dj.svg

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'leaderboard_screen.dart';
 
 // Lớp dữ liệu để quản lý thẻ bài
 class CardData {
-  String image;
+  final String image;
   bool isFlipped;
   bool isMatched;
 
@@ -15,21 +16,136 @@ class CardData {
   });
 }
 
+// Widget riêng để hiển thị thẻ, tối ưu render
+class CardWidget extends StatelessWidget {
+  final CardData card;
+  final VoidCallback onTap;
+
+  const CardWidget({
+    super.key,
+    required this.card,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: card.isMatched ? Colors.green : const Color(0xFF0288D1),
+          borderRadius: BorderRadius.circular(12.0),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 4,
+              offset: Offset(2, 2),
+            ),
+          ],
+        ),
+        child: card.isFlipped || card.isMatched
+            ? SvgPicture.asset(
+                card.image,
+                fit: BoxFit.cover,
+                placeholderBuilder: (context) => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              )
+            : const Center(
+                child: Text(
+                  '?',
+                  style: TextStyle(
+                    fontSize: 40,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+      ),
+    );
+  }
+}
+
 class GameScreen extends StatefulWidget {
   final int gridSize;
   final String playerName;
-  const GameScreen(
-      {super.key, required this.gridSize, required this.playerName});
+
+  const GameScreen({
+    super.key,
+    required this.gridSize,
+    required this.playerName,
+  });
 
   @override
   _GameScreenState createState() => _GameScreenState();
 }
 
 class _GameScreenState extends State<GameScreen> {
-  List<CardData> _cards = [];
+  late List<CardData> _cards;
   int? _firstFlippedIndex;
   int _moveCount = 0;
-  bool _isProcessing = false; // Biến để kiểm soát trạng thái xử lý
+  bool _isProcessing = false;
+
+  // Danh sách file SVG thực tế
+  static const List<String> _svgFiles = [
+    'ad',
+    'ae',
+    'af',
+    'ag',
+    'ai',
+    'al',
+    'am',
+    'ao',
+    'aq',
+    'ar',
+    'as',
+    'at',
+    'au',
+    'aw',
+    'ax',
+    'az',
+    'ba',
+    'bb',
+    'bd',
+    'be',
+    'bf',
+    'bg',
+    'bh',
+    'bi',
+    'bj',
+    'bl',
+    'bm',
+    'bn',
+    'bo',
+    'bq',
+    'br',
+    'bs',
+    'bt',
+    'bv',
+    'bw',
+    'by',
+    'bz',
+    'ca',
+    'cc',
+    'cd',
+    'cf',
+    'cg',
+    'ch',
+    'ci',
+    'ck',
+    'cl',
+    'cm',
+    'cn',
+    'co',
+    'cr',
+    'cu',
+    'cv',
+    'cw',
+    'cy',
+    'cz',
+    'de',
+    'dj',
+  ];
 
   @override
   void initState() {
@@ -39,10 +155,14 @@ class _GameScreenState extends State<GameScreen> {
 
   void _initializeCards() {
     final pairCount = (widget.gridSize * widget.gridSize) ~/ 2;
-    final images = List.generate(
-      pairCount,
-      (index) => 'assets/images/card${index + 1}.png',
-    );
+    if (pairCount > _svgFiles.length) {
+      throw Exception(
+          'Không đủ file SVG cho số lượng thẻ yêu cầu. Cần $pairCount file, nhưng chỉ có ${_svgFiles.length} file.');
+    }
+
+    final selectedFiles = _svgFiles.take(pairCount).toList();
+    final images =
+        selectedFiles.map((file) => 'assets/images/$file.svg').toList();
 
     _cards = [];
     for (var image in images) {
@@ -53,7 +173,6 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _flipCard(int index) {
-    // Không cho phép lật thẻ nếu đang xử lý hoặc thẻ đã lật/đã khớp
     if (_isProcessing || _cards[index].isFlipped || _cards[index].isMatched)
       return;
 
@@ -74,7 +193,7 @@ class _GameScreenState extends State<GameScreen> {
         _checkWin();
       } else {
         setState(() {
-          _isProcessing = true; // Đặt trạng thái đang xử lý
+          _isProcessing = true;
         });
         Future.delayed(const Duration(milliseconds: 500), () {
           if (mounted) {
@@ -82,7 +201,7 @@ class _GameScreenState extends State<GameScreen> {
               _cards[_firstFlippedIndex!].isFlipped = false;
               _cards[index].isFlipped = false;
               _firstFlippedIndex = null;
-              _isProcessing = false; // Kết thúc trạng thái xử lý
+              _isProcessing = false;
             });
           }
         });
@@ -91,10 +210,14 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   Future<void> _saveScore() async {
-    final prefs = await SharedPreferences.getInstance();
-    final leaderboard = prefs.getStringList('leaderboard') ?? [];
-    leaderboard.add('${widget.playerName}|${widget.gridSize}|$_moveCount');
-    await prefs.setStringList('leaderboard', leaderboard);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final leaderboard = prefs.getStringList('leaderboard') ?? [];
+      leaderboard.add('${widget.playerName}|${widget.gridSize}|$_moveCount');
+      await prefs.setStringList('leaderboard', leaderboard);
+    } catch (e) {
+      debugPrint('Lỗi khi lưu điểm: $e');
+    }
   }
 
   void _checkWin() {
@@ -104,15 +227,15 @@ class _GameScreenState extends State<GameScreen> {
         context: context,
         barrierDismissible: false,
         builder: (context) => AlertDialog(
-          title: const Text('Congratulations!'),
-          content: Text('You won in $_moveCount moves!'),
+          title: const Text('Chúc mừng!'),
+          content: Text('Bạn đã thắng với $_moveCount lượt!'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
                 Navigator.pop(context);
               },
-              child: const Text('Back to Menu'),
+              child: const Text('Quay lại Menu'),
             ),
             TextButton(
               onPressed: () {
@@ -122,7 +245,7 @@ class _GameScreenState extends State<GameScreen> {
                   MaterialPageRoute(builder: (_) => const LeaderboardScreen()),
                 );
               },
-              child: const Text('View Leaderboard'),
+              child: const Text('Xem Bảng xếp hạng'),
             ),
           ],
         ),
@@ -135,7 +258,8 @@ class _GameScreenState extends State<GameScreen> {
     return Scaffold(
       backgroundColor: Colors.blueGrey[50],
       appBar: AppBar(
-        title: const Text('Memory Game'),
+        title: const Text('Trò chơi Lật thẻ'),
+        centerTitle: true,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
@@ -167,49 +291,9 @@ class _GameScreenState extends State<GameScreen> {
               ),
               itemCount: _cards.length,
               itemBuilder: (context, index) {
-                return GestureDetector(
+                return CardWidget(
+                  card: _cards[index],
                   onTap: () => _flipCard(index),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: _cards[index].isMatched
-                          ? Colors.green
-                          : const Color(0xFF0288D1),
-                      borderRadius: BorderRadius.circular(12.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 4,
-                          offset: const Offset(2, 2),
-                        ),
-                      ],
-                    ),
-                    child: _cards[index].isFlipped || _cards[index].isMatched
-                        ? Image.asset(
-                            _cards[index].image,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Center(
-                                child: Text(
-                                  'Card ${index ~/ 2 + 1}',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              );
-                            },
-                          )
-                        : const Center(
-                            child: Text(
-                              '?',
-                              style: TextStyle(
-                                fontSize: 40,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                  ),
                 );
               },
             ),
