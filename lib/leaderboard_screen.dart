@@ -43,7 +43,6 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
         .cast<Map<String, dynamic>>()
         .toList();
 
-    // Chia dữ liệu thành 3 danh sách theo gridSize
     setState(() {
       _leaderboard4x4 = allLeaderboard
           .where((entry) => entry['gridSize'] == 4)
@@ -87,17 +86,16 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                 itemCount: leaderboard.length,
                 itemBuilder: (context, index) {
                   final entry = leaderboard[index];
-                  // Xác định màu và icon cho 3 hạng đầu
                   Color? rankColor;
                   String rankIcon = '';
                   if (index == 0) {
-                    rankColor = Colors.amber; // Hạng 1: Vàng
+                    rankColor = Colors.amber;
                     rankIcon = '🥇';
                   } else if (index == 1) {
-                    rankColor = Colors.grey[300]; // Hạng 2: Bạc
+                    rankColor = Colors.grey[300];
                     rankIcon = '🥈';
                   } else if (index == 2) {
-                    rankColor = Colors.orange[300]; // Hạng 3: Đồng
+                    rankColor = Colors.orange[300];
                     rankIcon = '🥉';
                   }
 
@@ -141,16 +139,74 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Leaderboard')),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildLeaderboardSection('4x4 Leaderboard', _leaderboard4x4),
-            _buildLeaderboardSection('6x6 Leaderboard', _leaderboard6x6),
-            _buildLeaderboardSection('8x8 Leaderboard', _leaderboard8x8),
-          ],
-        ),
+      body: Stack(
+        children: [
+          // Hình nền full màn hình
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/leaderboard.jpg'),
+                fit: BoxFit.cover,
+                opacity: 0.7,
+              ),
+            ),
+          ),
+          // AppBar và nội dung
+          Column(
+            children: [
+              // AppBar tùy chỉnh
+              Container(
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context)
+                      .padding
+                      .top, // Khoảng cách cho thanh trạng thái
+                  left: 16,
+                  right: 16,
+                  bottom: 10,
+                ),
+                color: Colors.transparent,
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Leaderboard',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Nội dung bảng xếp hạng
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        bottom: 20.0), // Khoảng cách dưới cùng
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildLeaderboardSection(
+                            '4x4 Leaderboard', _leaderboard4x4),
+                        _buildLeaderboardSection(
+                            '6x6 Leaderboard', _leaderboard6x6),
+                        _buildLeaderboardSection(
+                            '8x8 Leaderboard', _leaderboard8x8),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

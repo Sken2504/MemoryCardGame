@@ -1,83 +1,36 @@
 name: memory_game
 description: A new Flutter project.
 
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: 'none'
 
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.7.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
   shared_preferences: ^2.2.0
-  flutter_svg: ^2.0.10+1 # Thêm để hỗ trợ SVG
+  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.4.1
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/icon.jpg"
+  min_sdk_android: 21
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/images/icon.jpg"
 
 flutter:
   uses-material-design: true
 
   assets:
-    # Khai báo các file SVG
-    - assets/images/ad.svg
-    - assets/images/ae.svg
-    - assets/images/af.svg
-    - assets/images/ag.svg
-    - assets/images/ai.svg
-    - assets/images/al.svg
-    - assets/images/am.svg
-    - assets/images/ao.svg
-    - assets/images/aq.svg
-    - assets/images/ar.svg
-    - assets/images/as.svg
-    - assets/images/at.svg
-    - assets/images/au.svg
-    - assets/images/aw.svg
-    - assets/images/ax.svg
-    - assets/images/az.svg
-    - assets/images/ba.svg
-    - assets/images/bb.svg
-    - assets/images/bd.svg
-    - assets/images/be.svg
-    - assets/images/bf.svg
-    - assets/images/bg.svg
-    - assets/images/bh.svg
-    - assets/images/bi.svg
-    - assets/images/bj.svg
-    - assets/images/bl.svg
-    - assets/images/bm.svg
-    - assets/images/bn.svg
-    - assets/images/bo.svg
-    - assets/images/bq.svg
-    - assets/images/br.svg
-    - assets/images/bs.svg
-    - assets/images/bt.svg
-    - assets/images/bv.svg
-    - assets/images/bw.svg
-    - assets/images/by.svg
-    - assets/images/bz.svg
-    - assets/images/ca.svg
-    - assets/images/cc.svg
-    - assets/images/cd.svg
-    - assets/images/cf.svg
-    - assets/images/cg.svg
-    - assets/images/ch.svg
-    - assets/images/ci.svg
-    - assets/images/ck.svg
-    - assets/images/cl.svg
-    - assets/images/cm.svg
-    - assets/images/cn.svg
-    - assets/images/co.svg
-    - assets/images/cr.svg
-    - assets/images/cu.svg
-    - assets/images/cv.svg
-    - assets/images/cw.svg
-    - assets/images/cy.svg
-    - assets/images/cz.svg
-    - assets/images/de.svg
-    - assets/images/dj.svg
+    - assets/images/
